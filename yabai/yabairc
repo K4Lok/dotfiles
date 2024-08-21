@@ -1,0 +1,39 @@
+# ====== Variables =============================
+
+declare -A gaps
+
+gaps["top"]="10"
+gaps["bottom"]="10"
+gaps["left"]="10"
+gaps["right"]="10"
+gaps["inner"]="10"
+
+focused_color="0xff494d64"
+normal_color="0xffe1e3e4"
+
+# ===== Tiling setting =========================
+
+yabai -m config layout                      bsp
+
+yabai -m config --space 1 layout float
+
+yabai -m config top_padding                 ${gaps["top"]}
+yabai -m config bottom_padding              ${gaps["bottom"]}
+yabai -m config left_padding                ${gaps["left"]}
+yabai -m config right_padding               ${gaps["right"]}
+yabai -m config window_gap                  ${gaps["inner"]}
+
+# ===== Rules ==================================
+
+yabai -m rule --add label="Finder" app="^Finder$" title="(Co(py|nnect)|Move|Info|Pref)" manage=off
+yabai -m rule --add label="System Preferences" app="^System Preferences$" title=".*" manage=off
+yabai -m rule --add label="Activity Monitor" app="^Activity Monitor$" manage=off
+yabai -m rule --add label="Calculator" app="^Calculator$" manage=off
+
+# yabai -m rule --add label="iTerm2" app="^iTerm2$" manage=off
+yabai -m rule --add label="Docker Desktop" app="^Docker Desktop$" manage=off
+yabai -m rule --add label="WeChat" app="^WeChat$" manage=off
+yabai -m rule --add label="CleanShot X" app="^CleanShot X$" manage=off
+
+# Border Plugin
+borders active_color="$focused_color" inactive_color="$normal_color" width=5.0 &

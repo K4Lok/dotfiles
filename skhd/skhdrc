@@ -1,0 +1,64 @@
+# Restart yabai
+rshift + lctrl + ralt + rcmd + lcmd - r : yabai --restart-service
+
+# Focus next Display
+rshift + lctrl + ralt + rcmd - n : yabai -m display --focus next || yabai -m display --focus first
+
+# Focus Space by index
+rshift + lctrl + ralt + rcmd - 1 : yabai -m space --focus 1
+rshift + lctrl + ralt + rcmd - 2 : yabai -m space --focus 2
+rshift + lctrl + ralt + rcmd - 3 : yabai -m space --focus 3
+rshift + lctrl + ralt + rcmd - 4 : yabai -m space --focus 4
+
+# Focus Space (Prev, Next): rshift + lctrl + ralt + rcmd - {[, ]}
+rshift + lctrl + ralt + rcmd - 0x21 : yabai -m space --focus prev
+rshift + lctrl + ralt + rcmd - 0x1E : yabai -m space --focus next
+
+# Focus Window (In the same Space)
+rshift + lctrl + ralt + rcmd - h : yabai -m window --focus west
+rshift + lctrl + ralt + rcmd - j : yabai -m window --focus south
+rshift + lctrl + ralt + rcmd - k : yabai -m window --focus north
+rshift + lctrl + ralt + rcmd - l : yabai -m window --focus east
+
+## Moving Window & Focus
+# Move Window to next display
+rshift + lctrl + ralt + rcmd - m : (yabai -m window --display next && yabai -m display --focus next) || \
+                               (yabai -m window --display first && yabai -m display --focus first)
+
+# Move Window to space (Prev, Next) : rshift + lctrl + ralt + rcmd - {,, .}
+rshift + lctrl + ralt + rcmd - q : yabai -m window --space prev && yabai -m space --focus prev
+rshift + lctrl + ralt + rcmd - e : yabai -m window --space next && yabai -m space --focus next
+
+# Swap windows
+rshift + lctrl + ralt + rcmd + lcmd - a : yabai -m window --swap west
+rshift + lctrl + ralt + rcmd + lcmd - d : yabai -m window --swap east
+rshift + lctrl + ralt + rcmd + lcmd - w : yabai -m window --swap north
+rshift + lctrl + ralt + rcmd + lcmd - s : yabai -m window --swap south
+
+## Resize Window
+# Fullscreen
+rshift + lctrl + ralt + rcmd + lcmd - return : yabai -m window --toggle zoom-fullscreen
+
+# Balance Window
+rshift + lctrl + ralt + rcmd + lcmd - 0 : yabai -m space --balance
+
+# Increase window size
+rshift + lctrl + ralt + rcmd + lcmd - h : yabai -m window --resize left:-20:0 || yabai -m window --resize right:-20:0
+rshift + lctrl + ralt + rcmd + lcmd - l : yabai -m window --resize right:20:0 || yabai -m window --resize left:20:0
+rshift + lctrl + ralt + rcmd + lcmd - k : yabai -m window --resize top:0:-20 || yabai -m window --resize bottom:0:-20
+rshift + lctrl + ralt + rcmd + lcmd - j : yabai -m window --resize top:0:20 || yabai -m window --resize bottom:0:20
+
+# rshift + lctrl + ralt + rcmd + lcmd - h : yabai -m window --resize left:-20:0
+# rshift + lctrl + ralt + rcmd + lcmd - l : yabai -m window --resize right:-20:0
+# rshift + lctrl + ralt + rcmd + lcmd - k : yabai -m window --resize top:0:-20
+# rshift + lctrl + ralt + rcmd + lcmd - j : yabai -m window --resize bottom:0:20
+
+# Decrease window size
+# rshift + lctrl + ralt + rcmd + lcmd - h : yabai -m window --resize left:20:0
+# rshift + lctrl + ralt + rcmd + lcmd - l : yabai -m window --resize right:20:0
+# rshift + lctrl + ralt + rcmd + lcmd - k : yabai -m window --resize top:0:20
+# rshift + lctrl + ralt + rcmd + lcmd - s : yabai -m window --resize bottom:0:-20
+
+## Window Layout
+# Toggle Window Float
+rshift + lctrl + ralt + rcmd + lcmd - f : yabai -m window --toggle float
