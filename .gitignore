@@ -1,0 +1,5 @@
+# Ignore everything in the karabiner folder
+karabiner/*
+
+# But don't ignore the karabiner.json file
+!karabiner/karabiner.json
