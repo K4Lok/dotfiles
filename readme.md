@@ -17,6 +17,7 @@ This repository contains my personal configuration for a highly efficient macOS 
    brew install koekeishiya/formulae/skhd
    brew install FelixKratz/formulae/borders
    brew install --cask karabiner-elements
+   brew install jq
    ```
 
 3. Link the configuration files:
@@ -63,6 +64,12 @@ For more information on disabling SIP and enabling these features, please refer 
 ### Karabiner-Elements
 - Custom key mappings for improved workflow
 - Application-specific shortcuts
+
+### Utility Tools
+
+#### jq
+- Lightweight command-line JSON processor
+- Used in some scripts to parse yabai output
 
 ## Customization
 

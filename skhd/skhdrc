@@ -27,9 +27,15 @@ rshift + lctrl + ralt + rcmd - l : yabai -m window --focus east
 rshift + lctrl + ralt + rcmd - m : (yabai -m window --display next && yabai -m display --focus next) || \
                                (yabai -m window --display first && yabai -m display --focus first)
 
-# Move Window to space (Prev, Next) : rshift + lctrl + ralt + rcmd - {,, .}
-rshift + lctrl + ralt + rcmd - q : yabai -m window --space prev && yabai -m space --focus prev
-rshift + lctrl + ralt + rcmd - e : yabai -m window --space next && yabai -m space --focus next
+# Move Window to space (Prev, Next) : rshift + lctrl + ralt + rcmd - {q, e}
+rshift + lctrl + ralt + rcmd - q : window=$(yabai -m query --windows --window | jq -r '.id') && \
+                                   yabai -m window --space prev && \
+                                   yabai -m space --focus prev && \
+                                   yabai -m window --focus ${window}
+rshift + lctrl + ralt + rcmd - e : window=$(yabai -m query --windows --window | jq -r '.id') && \
+                                   yabai -m window --space next && \
+                                   yabai -m space --focus next && \
+                                   yabai -m window --focus ${window}
 
 # Swap windows
 rshift + lctrl + ralt + rcmd + lcmd - a : yabai -m window --swap west
