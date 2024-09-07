@@ -1,3 +1,6 @@
+# ====== Signal ===============================
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+
 # ====== Variables =============================
 
 declare -A gaps
@@ -15,8 +18,6 @@ normal_color="0xffe1e3e4"
 
 yabai -m config layout                      bsp
 
-yabai -m config --space 1 layout float
-
 yabai -m config top_padding                 ${gaps["top"]}
 yabai -m config bottom_padding              ${gaps["bottom"]}
 yabai -m config left_padding                ${gaps["left"]}
@@ -30,7 +31,6 @@ yabai -m rule --add label="System Preferences" app="^System Preferences$" title=
 yabai -m rule --add label="Activity Monitor" app="^Activity Monitor$" manage=off
 yabai -m rule --add label="Calculator" app="^Calculator$" manage=off
 
-# yabai -m rule --add label="iTerm2" app="^iTerm2$" manage=off
 yabai -m rule --add label="Docker Desktop" app="^Docker Desktop$" manage=off
 yabai -m rule --add label="WeChat" app="^WeChat$" manage=off
 yabai -m rule --add label="CleanShot X" app="^CleanShot X$" manage=off
