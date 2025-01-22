@@ -1,125 +1,176 @@
-# My macOS Productivity Setup
+# Dotfiles
 
-This repository contains my personal configuration for a highly efficient macOS workspace. It includes setup for Yabai (tiling window manager), SKHD (hotkey daemon), JankyBorders (window borders), and Karabiner-Elements (keyboard customization).
+My personal dotfiles for macOS development environment.
+
+## Tools
+
+### 10x
+
+A CLI tool to manage and toggle all the development tools in this repository. It provides an easy way to switch between power-user setup and default macOS behavior.
+
+```bash
+10x        # Show status
+10x on     # Enable all tools
+10x off    # Disable all tools
+```
+
+See [10x/README.md](10x/README.md) for detailed setup and usage.
+
+### Configurations
+
+- **yabai**: Window management
+- **skhd**: Keyboard shortcuts daemon
+- **karabiner**: Keyboard customization
+
+# 10x Tools
+
+A simple CLI tool to manage your macOS development environment, including window management (yabai), keyboard shortcuts (skhd), and keyboard customization (Karabiner-Elements).
+
+## What is this?
+
+10x Tools provides an easy way to toggle between a power-user development environment and the default macOS behavior. This is especially useful when:
+- Working on shared machines
+- Switching between different work environments
+- Need to quickly enable/disable your custom setup
+
+The tools managed include:
+- **Yabai**: Window management
+- **SKHD**: Keyboard shortcuts daemon
+- **Karabiner-Elements**: Keyboard customization
+- **Borders**: Window borders for yabai
 
 ## Installation
 
 1. Clone this repository:
-
-   ```sh
-   git clone git@github.com:K4Lok/dotfiles.git "${HOME}"/dotfiles
-   ```
-
-2. Install the required tools using Homebrew:
-
-   ```sh
-   brew install koekeishiya/formulae/yabai
-   brew install koekeishiya/formulae/skhd
-   brew install FelixKratz/formulae/borders
-   brew install --cask karabiner-elements
-   brew install jq
-   ```
-
-3. Link the configuration files:
-
-   ```sh
-   # For yabai and skhd
-   rm -f "${HOME}"/.{yabai,skhd}rc
-   ln -s "${HOME}"/dotfiles/yabai/yabairc "${HOME}"/.yabairc
-   ln -s "${HOME}"/dotfiles/skhd/skhdrc "${HOME}"/.skhdrc
-
-   # For Karabiner-Elements
-   rm -rf "${HOME}"/.config/karabiner
-   ln -s "${HOME}"/dotfiles/karabiner "${HOME}"/.config/karabiner
-
-   # Restart Karabiner-Elements to apply symbolic link
-   launchctl kickstart -k gui/`id -u`/org.pqrs.karabiner.karabiner_console_user_server
-
-   # Note: Ensure you're following the official guidelines for configuration file paths
-   # See: https://karabiner-elements.pqrs.org/docs/manual/misc/configuration-file-path/
-   ```
-
-## Features
-
-### Yabai
-- Tiling window management with BSP layout
-- Custom window padding and gaps
-- Specific rules for certain applications
-
-Note: Some advanced features of yabai require disabling System Integrity Protection (SIP). These features include:
-- Focus/move/swap/create/destroy space
-- Sticky windows (make windows appear on all spaces on the display that contains the window)
-- ...
-
-For more information on disabling SIP and enabling these features, please refer to the [yabai wiki on Disabling System Integrity Protection](https://github.com/koekeishiya/yabai/wiki/Disabling-System-Integrity-Protection).
-
-### SKHD
-- Vim-like window focus navigation
-- Quick space switching and window movement
-- Window resizing and layout controls
-
-### JankyBorders
-- Customizable window borders for active and inactive windows
-
-### Karabiner-Elements
-- Custom key mappings for improved workflow
-- Application-specific shortcuts
-
-### Utility Tools
-
-#### jq
-- Lightweight command-line JSON processor
-- Used in some scripts to parse yabai output
-
-## Customization
-
-Modify the configuration files in the `dotfiles` directory to suit your preferences:
-
-- `yabai/yabairc` for Yabai settings
-- `skhd/skhdrc` for keyboard shortcuts
-- `karabiner/karabiner.json` for Karabiner-Elements configuration
-
-Remember to restart services after making changes:
-
-```sh
-yabai --restart-service
+```bash
+git clone https://github.com/yourusername/10x-tools.git
+cd 10x-tools
 ```
 
-For skhd and Karabiner-Elements, changes will apply automatically.
+2. Set up required permissions:
+```bash
+# Make scripts executable
+chmod +x setup-10x
+chmod +x 10x
+
+# Set up yabai scripting addition
+# Note: This requires SIP to be partially disabled
+sudo yabai --install-sa
+sudo yabai --load-sa
+
+# Grant accessibility permissions
+echo "Please grant accessibility permissions for:"
+echo "- Yabai"
+echo "- SKHD"
+echo "- Karabiner-Elements"
+open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
+```
+
+3. Run the setup script:
+```bash
+./setup-10x
+```
+
+4. After installation, restart your terminal or run:
+```bash
+source ~/.zshrc
+```
+
+### System Integrity Protection (SIP)
+
+Yabai requires SIP to be partially disabled for full functionality. To configure this:
+
+1. Restart your Mac in Recovery Mode (hold Command + R during startup)
+2. Open Terminal from Utilities menu
+3. Run:
+```bash
+csrutil enable --without debug --without fs
+```
+4. Restart your Mac
+
+### Accessibility Permissions
+
+The tools require accessibility permissions to function properly. You'll need to enable them in:
+- System Settings > Privacy & Security > Accessibility
+
+Add permissions for:
+- Yabai
+- SKHD
+- Karabiner-Elements
+
+## Usage
+
+After installation, you can use the following commands:
+
+- `10x` - Show the current status of all tools
+- `10x on` - Enable all tools (yabai, skhd, karabiner, borders)
+- `10x off` - Disable all tools
+
+Example output:
+```bash
+=== 10x Tools Status ===
+10x mode is active
+Services status:
+✓ yabai is running
+✓ skhd is running
+✓ karabiner is running
+```
+
+## Requirements
+
+- macOS
+- Homebrew (will be installed if not present)
+- Partially disabled SIP for full yabai functionality
+
+## Files
+
+- `10x`: The main command-line tool for managing your environment
+- `setup-10x`: Installation script that sets up dependencies and the CLI tool
+
+## Configuration
+
+The tool stores its state in `~/.config/10x/status`. Each user on the system will have their own configuration.
 
 ## Troubleshooting
 
-### Karabiner-Elements Service Name
+If you encounter permission issues:
 
-```sh
-Could not find service "org.pqrs.karabiner.karabiner_console_user_server" in domain for user gui: 501
+1. Check service status:
+```bash
+yabai --check-sa
+skhd --version
 ```
 
-The official documentation suggests using the following command to restart Karabiner-Elements:
-
-```sh
-launchctl kickstart -k gui/`id -u`/org.pqrs.karabiner.karabiner_console_user_server
+2. Verify permissions:
+```bash
+ls -la ~/.local/bin/10x
+ls -la /usr/local/bin/yabai
 ```
 
-However, on some systems, the service name might be different. If you encounter an error like "Could not find service", you may need to identify the correct service name.
+3. Common fixes:
+```bash
+# Reset yabai scripting addition
+sudo yabai --uninstall-sa
+sudo yabai --install-sa
 
-To find the correct Karabiner-Elements service name on your system:
+# Reset permissions
+chmod +x ~/.local/bin/10x
+```
 
-1. List all Karabiner-related services:
-   ```sh
-   launchctl list | grep karabiner
-   ```
+## Uninstallation
 
-2. Look for a service name similar to `org.pqrs.karabiner.karabiner_console_user_server` or `org.pqrs.service.agent.karabiner_console_user_server`.
+To uninstall:
+1. Run `10x off` to disable all services
+2. Remove the installed files:
+```bash
+rm ~/.local/bin/10x
+rm -rf ~/.config/10x
+```
 
-3. Use the service name you find in the kickstart command:
-   ```sh
-   launchctl kickstart -k gui/`id -u`/[correct_service_name]
-   ```
+## Contributing
 
-   Replace `[correct_service_name]` with the actual service name you found.
+Feel free to open issues or submit pull requests if you have suggestions for improvements!
 
+## License
 
-## Notes
-
-This setup is tailored to my personal workflow. Feel free to use it as a reference or starting point for your own productivity setup.
+MIT License
