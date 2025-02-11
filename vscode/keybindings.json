@@ -1,0 +1,140 @@
+// Place your key bindings in this file to override the defaults
+[
+  // Vim like navigation
+  {
+      "key": "ctrl+j",
+      "command": "workbench.action.quickOpenSelectNext",
+      "when": "inQuickOpen"
+  },
+  {
+      "key": "ctrl+k",
+      "command": "workbench.action.quickOpenSelectPrevious",
+      "when": "inQuickOpen"
+  },
+  {
+      "key": "ctrl+j",
+      "command": "selectNextSuggestion",
+      "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  {
+      "key": "ctrl+k",
+      "command": "selectPrevSuggestion",
+      "when": "suggestWidgetMultipleSuggestions && suggestWidgetVisible && textInputFocus"
+  },
+  // Windows & Tabs Navigations
+  {
+      "key": "cmd+n",
+      "command": "workbench.action.focusNextGroup"
+  },
+  {
+      "key": "cmd+shift+n",
+      "command": "workbench.action.focusPreviousGroup"
+  },
+  {
+      "key": "cmd+1",
+      "command": "workbench.action.openEditorAtIndex1"
+  },
+  {
+      "key": "cmd+2",
+      "command": "workbench.action.openEditorAtIndex2"
+  },
+  {
+      "key": "cmd+3",
+      "command": "workbench.action.openEditorAtIndex3"
+  },
+  {
+      "key": "cmd+4",
+      "command": "workbench.action.openEditorAtIndex4"
+  },
+  {
+      "key": "cmd+5",
+      "command": "workbench.action.openEditorAtIndex5"
+  },
+  {
+      "key": "cmd+6",
+      "command": "workbench.action.openEditorAtIndex6"
+  },
+  {
+      "key": "cmd+7",
+      "command": "workbench.action.openEditorAtIndex7"
+  },
+  {
+      "key": "cmd+8",
+      "command": "workbench.action.openEditorAtIndex8"
+  },
+  {
+      "key": "cmd+9",
+      "command": "workbench.action.openEditorAtIndex9"
+  },
+  {
+      "key": "shift+cmd+i",
+      "command": "inlineChat.start",
+      "when": "editorFocus && inlineChatHasProvider && !editorReadonly"
+  },
+  {
+      "key": "cmd+i",
+      "command": "-inlineChat.start",
+      "when": "editorFocus && inlineChatHasProvider && !editorReadonly"
+  },
+  {
+      "key": "cmd+i",
+      "command": "editor.action.triggerSuggest",
+      "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+  },
+  {
+      "key": "cmd+i",
+      "command": "-editor.action.triggerSuggest",
+      "when": "editorHasCompletionItemProvider && textInputFocus && !editorReadonly && !suggestWidgetVisible"
+  },
+  {
+      "key": "shift+cmd+i",
+      "command": "composer.startComposerPrompt",
+      "when": "composerIsEnabled"
+  },
+  {
+      "key": "cmd+i",
+      "command": "-composer.startComposerPrompt",
+      "when": "composerIsEnabled"
+  },
+  {
+      "key": "shift+cmd+i",
+      "command": "workbench.action.chat.holdToVoiceChatInChatView",
+      "when": "chatIsEnabled && hasSpeechProvider && !chatSessionRequestInProgress && !editorFocus && !inChatInput && !inlineChatFocused && !notebookEditorFocused"
+  },
+  {
+      "key": "cmd+i",
+      "command": "-workbench.action.chat.holdToVoiceChatInChatView",
+      "when": "chatIsEnabled && hasSpeechProvider && !chatSessionRequestInProgress && !editorFocus && !inChatInput && !inlineChatFocused && !notebookEditorFocused"
+  },
+  {
+      "key": "shift+cmd+k",
+      "command": "aipopup.action.modal.generate",
+      "when": "editorFocus && !composerBarIsVisible"
+  },
+  {
+      "key": "cmd+k",
+      "command": "-aipopup.action.modal.generate",
+      "when": "editorFocus && !composerBarIsVisible"
+  },
+  {
+      "key": "shift+cmd+k",
+      "command": "cursorai.action.generateInTerminal",
+      "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  {
+      "key": "cmd+k",
+      "command": "-cursorai.action.generateInTerminal",
+      "when": "terminalFocus && terminalHasBeenCreated || terminalFocus && terminalProcessSupported"
+  },
+  // Completion Suggestion
+  // {
+  //     "key": "ctrl+i",
+  //     "command": "editor.action.triggerSuggest",
+  //     "when": "editorHasCompletionItemProvider && editorTextFocus && !editorReadonly"
+  // },
+  // {
+  //     "key": "ctrl+i",
+  //     "command": "toggleSuggestionDetails",
+  //     "when": "editorTextFocus && suggestWidgetVisible"
+  // },
+]
