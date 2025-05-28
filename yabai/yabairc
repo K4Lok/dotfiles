@@ -39,6 +39,10 @@ yabai -m rule --add label="WeChat" app="^WeChat" manage=off
 yabai -m rule --add label="CleanShot X" app="^CleanShot X$" manage=off
 yabai -m rule --add label="Screen Studio" app="^Screen Studio$" manage=off
 
+# use following comment to list out the window title
+# yabai -m query --windows \
+#   | jq -r '.[] | "\(.id)\t\(.app)\t\(.title)"'
+
 # ===== Border Plugin ==========================
 borders \
     active_color="$focused_color" \

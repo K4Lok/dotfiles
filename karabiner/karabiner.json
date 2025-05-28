@@ -37,6 +37,12 @@
                                         "modifiers": ["left_option"]
                                     }
                                 ],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -51,6 +57,12 @@
                                     {
                                         "key_code": "right_arrow",
                                         "modifiers": ["left_option"]
+                                    }
+                                ],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
                                     }
                                 ],
                                 "type": "basic"
@@ -69,6 +81,12 @@
                                         "modifiers": ["left_command"]
                                     }
                                 ],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
+                                    }
+                                ],
                                 "type": "basic"
                             }
                         ]
@@ -85,6 +103,12 @@
                                     }
                                 },
                                 "to": [{ "key_code": "up_arrow" }],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -96,6 +120,12 @@
                                     }
                                 },
                                 "to": [{ "key_code": "down_arrow" }],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -107,6 +137,12 @@
                                     }
                                 },
                                 "to": [{ "key_code": "left_arrow" }],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -118,6 +154,12 @@
                                     }
                                 },
                                 "to": [{ "key_code": "right_arrow" }],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -132,6 +174,12 @@
                                     {
                                         "key_code": "right_arrow",
                                         "modifiers": ["left_command"]
+                                    }
+                                ],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
                                     }
                                 ],
                                 "type": "basic"
@@ -155,6 +203,12 @@
                                         "modifiers": ["fn"]
                                     }
                                 ],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -169,6 +223,12 @@
                                     {
                                         "key_code": "up_arrow",
                                         "modifiers": ["fn"]
+                                    }
+                                ],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
                                     }
                                 ],
                                 "type": "basic"
@@ -189,6 +249,12 @@
                                         "modifiers": ["command"]
                                     }
                                 ],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
+                                    }
+                                ],
                                 "type": "basic"
                             },
                             {
@@ -200,6 +266,12 @@
                                     {
                                         "key_code": "down_arrow",
                                         "modifiers": ["command"]
+                                    }
+                                ],
+                                "conditions": [
+                                    {
+                                        "type": "frontmost_application_unless",
+                                        "bundle_identifiers": ["^com\\.tradingview\\.tradingviewapp\\.desktop$"]
                                     }
                                 ],
                                 "type": "basic"
