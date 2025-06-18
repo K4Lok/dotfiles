@@ -33,11 +33,12 @@ yabai -m rule --add label="Activity Monitor" app="^Activity Monitor$" manage=off
 yabai -m rule --add label="Calculator" app="^Calculator$" manage=off
 yabai -m rule --add label="iPhone Mirroring" app="^iPhone Mirroring$" manage=off
 
-yabai -m rule --add label="Docker Desktop" app="^Docker Desktop$" manage=off
-yabai -m rule --add label="WhatsApp" app="^WhatsApp" manage=off
-yabai -m rule --add label="WeChat" app="^WeChat" manage=off
+# yabai -m rule --add label="Docker Desktop" app="^Docker Desktop$" manage=off
+yabai -m rule --add label="WhatsApp" app="^WhatsApp$" manage=off
+yabai -m rule --add label="WeChat" app="^WeChat$" manage=off
 yabai -m rule --add label="CleanShot X" app="^CleanShot X$" manage=off
 yabai -m rule --add label="Screen Studio" app="^Screen Studio$" manage=off
+yabai -m rule --add label="Perplexity Voice Mode" app="^Perplexity$" title="^Perplexity Voice Mode$" manage=off
 
 # use following comment to list out the window title
 # yabai -m query --windows \
