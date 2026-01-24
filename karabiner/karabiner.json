@@ -5,6 +5,27 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Disable Cmd+H and Cmd+Option+H Hide (rev 2)",
+                        "manipulators": [
+                            {
+                                "description": "Disable Cmd+H",
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": { "mandatory": ["command"] }
+                                },
+                                "type": "basic"
+                            },
+                            {
+                                "description": "Disable Cmd+Option+H",
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": { "mandatory": ["command", "option"] }
+                                },
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Caps Lock → Hyper Key (⌃⌥⇧⌘) | Escape if alone | Use fn + caps lock to enable caps lock",
                         "manipulators": [
                             {
@@ -273,7 +294,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "down_arrow",
+                                        "key_code": "up_arrow",
                                         "modifiers": ["command"]
                                     }
                                 ],
@@ -294,7 +315,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "up_arrow",
+                                        "key_code": "down_arrow",
                                         "modifiers": ["command"]
                                     }
                                 ],

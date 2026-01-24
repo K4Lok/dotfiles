@@ -39,6 +39,7 @@ yabai -m rule --add label="WeChat" app="^WeChat$" manage=off
 yabai -m rule --add label="CleanShot X" app="^CleanShot X$" manage=off
 yabai -m rule --add label="Screen Studio" app="^Screen Studio$" manage=off
 yabai -m rule --add label="Perplexity Voice Mode" app="^Perplexity$" title="^Perplexity Voice Mode$" manage=off
+yabai -m rule --add label="Simulator" app="^Simulator$" manage=off
 
 # use following comment to list out the window title
 # yabai -m query --windows \
