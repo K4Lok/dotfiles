@@ -21,7 +21,7 @@ This setup includes a modern, aesthetically pleasing terminal environment with t
 - **zsh-autosuggestions** - Fish-like autosuggestions for Zsh
 - **zsh-syntax-highlighting** - Syntax highlighting for Zsh
 - **Tmux** with Nord theme for terminal multiplexing
-- **iTerm2** with Nord color scheme
+- **iTerm2** with complete configuration including Nord color scheme, fonts, profiles, and preferences
 
 ### Installation
 
@@ -63,11 +63,42 @@ ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
 
 #### 3. Configure iTerm2
 
-1. Open iTerm2 preferences (`Cmd + ,`)
-2. Navigate to **Profiles** → **Colors**
-3. Click **Color Presets...** → **Import...**
-4. Import the Nord theme from: `iterm2/Nord.itermcolors`
-5. Select **Nord** from the presets
+The iTerm2 configuration includes:
+- **Nord color scheme** (embedded in the preferences)
+- **Font**: JetBrains Mono Nerd Font (Regular, 12pt) for normal text, Monaco (12pt) for non-ASCII
+- **Profile**: "Nord + p10k" profile with optimized settings
+- **Preferences**: Window behavior, transparency, scrollback, and other customizations
+
+**Option A: Import Preferences File (Recommended for new setup)**
+
+1. Quit iTerm2 completely (`Cmd + Q`)
+2. Backup your existing preferences:
+   ```sh
+   mv ~/Library/Preferences/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist.backup 2>/dev/null || true
+   ```
+3. Copy the preferences file:
+   ```sh
+   cp ~/dotfiles/iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+   ```
+4. Restart iTerm2 - your settings will be loaded automatically
+
+**Option B: Use Symlink (For syncing across machines)**
+
+1. Quit iTerm2 completely (`Cmd + Q`)
+2. Backup your existing preferences:
+   ```sh
+   mv ~/Library/Preferences/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist.backup 2>/dev/null || true
+   ```
+3. Create a symlink:
+   ```sh
+   ln -s ~/dotfiles/iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+   ```
+4. Restart iTerm2
+
+**Note**: If you don't have JetBrains Mono Nerd Font installed, you can install it via:
+```sh
+brew install --cask font-jetbrains-mono-nerd-font
+```
 
 #### 4. Apply Changes
 
@@ -87,6 +118,16 @@ The `.p10k.zsh` file contains instant prompt initialization and theme customizat
 - Character set
 - Color scheme
 - Prompt segments
+
+#### iTerm2 Configuration
+The `iterm2/com.googlecode.iterm2.plist` file contains:
+- **Nord color scheme** - Complete color palette embedded in preferences
+- **Font settings** - JetBrains Mono Nerd Font (12pt) for optimal readability
+- **Profile configuration** - "Nord + p10k" profile with transparency, scrollback, and terminal settings
+- **Window preferences** - Custom window behavior, tab settings, and appearance options
+- **Keyboard shortcuts** - Custom key bindings and terminal behavior
+
+To sync iTerm2 settings across machines, use Option B (symlink) in the installation steps above. This ensures changes are tracked in git and synced automatically.
 
 #### Tmux Nord Theme
 The `.tmux.conf` includes:
