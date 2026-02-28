@@ -14,6 +14,10 @@ export NVM_DIR="$HOME/.nvm"
 alias pn="pnpm"
 alias vim='/opt/homebrew/bin/vim'
 
+bindkey -e
+bindkey "^[[1;3C" forward-word
+bindkey "^[[1;3D" backward-word
+
 export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
@@ -161,3 +165,7 @@ source $ZSH/oh-my-zsh.sh
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 export PATH="$HOME/.orbstack/bin:$PATH"
+export PATH="$PATH:$HOME/.pub-cache/bin"
+
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=251,bold,underline'
+export ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=203'

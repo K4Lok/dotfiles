@@ -183,7 +183,20 @@ This repository includes configuration for a highly efficient macOS workspace wi
    launchctl kickstart -k gui/`id -u`/org.pqrs.karabiner.karabiner_console_user_server
    ```
 
-4. Run the setup script to configure the 10x tool:
+4. Load yabai scripting addition (required for advanced features):
+
+   ```sh
+   sudo yabai --load-sa
+   ```
+
+   **Important**: This command loads the yabai scripting addition, which is required for advanced features that need System Integrity Protection (SIP) to be disabled. You'll need to run this command:
+   - After initial installation
+   - After system updates or reboots
+   - If yabai stops working properly
+
+   Note: The yabai configuration file includes a signal handler that automatically reloads the scripting addition when the Dock restarts, but you still need to run this command manually after installation and system reboots.
+
+5. Run the setup script to configure the 10x tool:
 
    ```sh
    cd "${HOME}"/dotfiles/10x
@@ -198,9 +211,11 @@ This repository includes configuration for a highly efficient macOS workspace wi
 - Custom window padding and gaps
 - Specific rules for certain applications
 
-Note: Some advanced features of yabai require disabling System Integrity Protection (SIP). These features include:
+**Important Setup Note**: Some advanced features of yabai require disabling System Integrity Protection (SIP) and loading the scripting addition. These features include:
 - Focus/move/swap/create/destroy space
 - Sticky windows (make windows appear on all spaces on the display that contains the window)
+
+After disabling SIP, you must run `sudo yabai --load-sa` to load the scripting addition. This command is included in the installation steps above and should be run after system reboots.
 
 For more information on disabling SIP and enabling these features, please refer to the [yabai wiki on Disabling System Integrity Protection](https://github.com/koekeishiya/yabai/wiki/Disabling-System-Integrity-Protection).
 
