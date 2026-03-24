@@ -7,6 +7,9 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 
+# Rust / Cargo (rustup)
+[[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
@@ -169,3 +172,10 @@ export PATH="$PATH:$HOME/.pub-cache/bin"
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=251,bold,underline'
 export ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=203'
+
+# Only run this if we are not already inside a tmux session
+if [[ -z "$TMUX" ]]; then
+    # Check if 'main' exists, if so attach. If not, start it.
+    # This will trigger tmux-continuum to restore ALL your sessions (work, side, etc.)
+    tmux attach-session -t main 2>/dev/null || tmux new-session -s main
+fi
