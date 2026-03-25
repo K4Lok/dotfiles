@@ -129,6 +129,13 @@ The `iterm2/com.googlecode.iterm2.plist` file contains:
 
 To sync iTerm2 settings across machines, use Option B (symlink) in the installation steps above. This ensures changes are tracked in git and synced automatically.
 
+**Exporting iTerm2 settings to this repo:**
+
+If you've made changes in iTerm2 and want to update the config in this repo, run:
+```sh
+plutil -convert xml1 -o ~/dotfiles/iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+```
+
 #### Tmux Nord Theme
 The `.tmux.conf` includes:
 - Nord color palette integration

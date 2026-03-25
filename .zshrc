@@ -172,10 +172,3 @@ export PATH="$PATH:$HOME/.pub-cache/bin"
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=251,bold,underline'
 export ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=203'
-
-# Only run this if we are not already inside a tmux session
-if [[ -z "$TMUX" ]]; then
-    # Check if 'main' exists, if so attach. If not, start it.
-    # This will trigger tmux-continuum to restore ALL your sessions (work, side, etc.)
-    tmux attach-session -t main 2>/dev/null || tmux new-session -s main
-fi
