@@ -172,3 +172,7 @@ export PATH="$PATH:$HOME/.pub-cache/bin"
 
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=251,bold,underline'
 export ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=203'
+
+alias cpbn='git branch --show-current | pbcopy'
+
+export DFX_MOC_PATH=moc-wrapper
