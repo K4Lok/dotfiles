@@ -70,8 +70,8 @@ enable_10x() {
     else
         echo -e "${RED}No custom Karabiner profile found${NC}"
     fi
-    # Start borders
-    borders active_color="0xff494d64" inactive_color="0xffe1e3e4" width=5.0 &
+    # Start borders (disabled)
+    # borders active_color="0xff494d64" inactive_color="0xffe1e3e4" width=5.0 &
     
     echo -e "${GREEN}10x mode has been enabled${NC}"
     status
