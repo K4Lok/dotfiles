@@ -5,22 +5,17 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Disable Cmd+H and Cmd+Option+H Hide (rev 2)",
+                        "description": "Disable Command + H (stop hiding windows)",
                         "manipulators": [
                             {
-                                "description": "Disable Cmd+H",
                                 "from": {
                                     "key_code": "h",
-                                    "modifiers": { "mandatory": ["command"] }
+                                    "modifiers": {
+                                        "mandatory": ["command"],
+                                        "optional": ["caps_lock"]
+                                    }
                                 },
-                                "type": "basic"
-                            },
-                            {
-                                "description": "Disable Cmd+Option+H",
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": { "mandatory": ["command", "option"] }
-                                },
+                                "to": [{ "key_code": "vk_none" }],
                                 "type": "basic"
                             }
                         ]
