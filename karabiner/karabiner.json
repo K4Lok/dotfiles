@@ -5,6 +5,16 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "F24 → fn (globe) key | Keychron has no fn key; set that key to F24 in Keychron Launcher",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "f24" },
+                                "to": [{ "key_code": "fn" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Disable Command + H (stop hiding windows)",
                         "manipulators": [
                             {
