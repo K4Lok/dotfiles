@@ -1,8 +1,8 @@
 # Restart yabai
 rshift + lctrl + ralt + rcmd + lcmd - r : yabai --restart-service
 
-# Focus next Display
-rshift + lctrl + ralt + rcmd - n : yabai -m display --focus next || yabai -m display --focus first
+# Focus next Display (lands on a real window, skips Typeless overlay)
+rshift + lctrl + ralt + rcmd - n : ~/dotfiles/yabai/scripts/focus-display.sh next
 
 # Focus Space by index
 rshift + lctrl + ralt + rcmd - 1 : yabai -m space --focus 1
