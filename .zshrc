@@ -183,11 +183,30 @@ export DFX_MOC_PATH=moc-wrapper
 export VPN_CFG="$HOME/.config/openvpn/work.ovpn"
 export VPN_PID="$HOME/.config/openvpn/work.pid"
 export VPN_LOG="$HOME/.config/openvpn/work.log"
-export VPN_TS_BYPASS="$HOME/.config/openvpn/tailscale-bypass.sh"
+# Bypass helper lives in this dotfiles repo, so every cloned device has it
+# with no extra symlink step.
+export VPN_TS_BYPASS="$HOME/dotfiles/openvpn/tailscale-bypass.sh"
 
 vpn-up() {
   if [ -f "$VPN_PID" ] && sudo kill -0 "$(cat "$VPN_PID")" 2>/dev/null; then
     echo "VPN already up (pid $(cat "$VPN_PID"))"; return 0
+  fi
+  # Self-heal for a device set up before the config was renamed: if the expected
+  # config is absent but exactly one other *.ovpn sits alongside it, adopt that
+  # one. Discovered at runtime so no old/identifying filename lives in this repo.
+  if [ ! -f "$VPN_CFG" ]; then
+    local _vdir _legacy _n
+    _vdir=$(dirname "$VPN_CFG")
+    _legacy=$(find "$_vdir" -maxdepth 1 -type f -name '*.ovpn' ! -name "$(basename "$VPN_CFG")" 2>/dev/null)
+    _n=$(printf '%s' "$_legacy" | grep -c .)
+    if [ "$_n" = "1" ]; then
+      echo "Adopting existing OpenVPN config → $(basename "$VPN_CFG")"
+      mv "$_legacy" "$VPN_CFG" || { echo "⚠️  could not rename config"; return 1; }
+    elif [ "$_n" -gt 1 ]; then
+      echo "⚠️  $VPN_CFG missing and multiple *.ovpn present — rename the right one to $(basename "$VPN_CFG") manually"; return 1
+    else
+      echo "⚠️  VPN config not found: $VPN_CFG — install the OpenVPN profile there"; return 1
+    fi
   fi
   # Capture the real router BEFORE the full tunnel takes over, so Tailscale's
   # DERP/control traffic can be pinned back to it (see tailscale-bypass.sh).
