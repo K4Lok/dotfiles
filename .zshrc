@@ -176,3 +176,61 @@ export ZSH_HIGHLIGHT_STYLES[unknown-token]='fg=203'
 alias cpbn='git branch --show-current | pbcopy'
 
 export DFX_MOC_PATH=moc-wrapper
+
+# ── Work VPN (openvpn CLI) ──────────────────────────────────────────
+# Config: ~/.config/openvpn/work.ovpn (cert-only auth; never committed).
+# Usage: vpn-up → ssh -fN <db-tunnel> → vpn-down   (host alias lives in ~/.ssh/config)
+export VPN_CFG="$HOME/.config/openvpn/work.ovpn"
+export VPN_PID="$HOME/.config/openvpn/work.pid"
+export VPN_LOG="$HOME/.config/openvpn/work.log"
+export VPN_TS_BYPASS="$HOME/.config/openvpn/tailscale-bypass.sh"
+
+vpn-up() {
+  if [ -f "$VPN_PID" ] && sudo kill -0 "$(cat "$VPN_PID")" 2>/dev/null; then
+    echo "VPN already up (pid $(cat "$VPN_PID"))"; return 0
+  fi
+  # Capture the real router BEFORE the full tunnel takes over, so Tailscale's
+  # DERP/control traffic can be pinned back to it (see tailscale-bypass.sh).
+  local phys_gw
+  phys_gw=$(route -n get default 2>/dev/null | awk '/gateway/{print $2; exit}')
+  echo "Starting VPN (sudo)…"
+  sudo openvpn --config "$VPN_CFG" --daemon --writepid "$VPN_PID" --log "$VPN_LOG"
+  for i in {1..15}; do
+    if grep -q "Initialization Sequence Completed" "$VPN_LOG" 2>/dev/null; then
+      echo "✅ VPN up"
+      PHYS_GW="$phys_gw" sh "$VPN_TS_BYPASS" add || echo "⚠️  tailscale-bypass failed — Tailscale may be down"
+      vpn-status; return 0
+    fi
+    sleep 1
+  done
+  echo "⚠️  VPN didn't confirm in 15s — tail $VPN_LOG"; return 1
+}
+
+vpn-down() {
+  sh "$VPN_TS_BYPASS" del 2>/dev/null || true
+  if [ -f "$VPN_PID" ]; then
+    sudo kill "$(cat "$VPN_PID")" 2>/dev/null && echo "VPN stopped"
+    sudo rm -f "$VPN_PID"
+  else
+    sudo pkill -f "openvpn --config $VPN_CFG" && echo "VPN stopped (by name)" || echo "VPN was not running"
+  fi
+}
+
+# Show whether the tunnel process is alive, plus current public IP + geo
+# (so you can confirm traffic is actually egressing via the VPN).
+vpn-status() {
+  if [ -f "$VPN_PID" ] && sudo kill -0 "$(cat "$VPN_PID")" 2>/dev/null; then
+    echo "VPN process: UP (pid $(cat "$VPN_PID"))"
+  else
+    echo "VPN process: DOWN"
+  fi
+  echo "Public IP / location:"
+  local info
+  info=$(curl -fsS --max-time 8 ipinfo.io/json 2>/dev/null)
+  if [ -n "$info" ]; then
+    echo "$info" | jq -r '"  ip:      \(.ip)\n  location: \(.city), \(.region), \(.country)\n  org:     \(.org)"'
+  else
+    echo "  (could not reach ipinfo.io — check connectivity)"
+  fi
+}
+

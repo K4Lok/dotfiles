@@ -5,3 +5,18 @@ karabiner/*
 !karabiner/karabiner.json
 
 .DS_Store
+
+# ── Secrets & VPN runtime artifacts — NEVER commit ──────────────
+# cert-only .ovpn files embed private keys; .pem/.key are credentials.
+*.ovpn
+*.pem
+*.key
+*.crt
+*.p12
+# openvpn runtime state (regenerated each run)
+*.pid
+*.log
+*.routes
+openvpn/*.ovpn
+openvpn/*.pid
+openvpn/*.log
