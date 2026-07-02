@@ -218,6 +218,14 @@ vpn-up() {
     if grep -q "Initialization Sequence Completed" "$VPN_LOG" 2>/dev/null; then
       echo "✅ VPN up"
       PHYS_GW="$phys_gw" sh "$VPN_TS_BYPASS" add || echo "⚠️  tailscale-bypass failed — Tailscale may be down"
+      # Re-pin a few seconds later: some /32 DERP routes can fail to land on the
+      # first pass while the tunnel's own 0/1+128.0/1 routes are still settling,
+      # leaving only a subset of a region's relay nodes pinned (root cause of the
+      # 2026-07-02 breakage: only 1 of 3 hkg nodes pinned → Tailscale relay/mosh
+      # broke when it used an unpinned node). `add` re-pulls the live DERP map and
+      # is idempotent (route add||change||true), so this backfills the stragglers.
+      # sudo is still cached from the openvpn start above, so no prompt.
+      ( sleep 6; PHYS_GW="$phys_gw" sh "$VPN_TS_BYPASS" add >/dev/null 2>&1 ) &
       vpn-status; return 0
     fi
     sleep 1
