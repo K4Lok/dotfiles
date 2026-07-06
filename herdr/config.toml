@@ -161,6 +161,25 @@ overlay0 = "#c2cce2"   # agent-name label + unknown status + muted UI — lifted
 sidebar_width = 32
 mouse_capture = true       # tmux: set -g mouse on
 
+# --- Sound (2026-07-06) — herdr now owns the done/needs-attention chimes ---
+# Replaces the old Claude Code afplay hooks (smb_kick / smb_coin), removed from
+# ~/.claude/settings.json the same day. herdr plays its built-in sounds when an
+# agent CHANGES STATE — done (finished) or request (needs your input).
+# SCOPE CAVEAT (by herdr design, src/sound.rs): sounds fire only for agents in
+# BACKGROUND workspaces — the pane you're actively focused on stays silent
+# (you can already see it finish). There is NO "also sound the focused pane"
+# switch in herdr 0.7.1. Kill-switch env: HERDR_DISABLE_SOUND=1.
+[ui.sound]
+enabled = true
+# No custom paths → herdr's built-in default chimes for both done + request.
+# To customise later: path / done_path / request_path = "sounds/x.mp3" (mp3 only,
+# relative to this file's dir). The Downloads/*.wav files won't work (wav ≠ mp3).
+
+# Per-agent: default | on | off. Global enabled=true already sounds every agent
+# EXCEPT droid, which herdr mutes by default — unmute it so "all agents" holds.
+[ui.sound.agents]
+droid = "on"
+
 [session]
 # tmux-resurrect/continuum equivalent. On a Herdr SERVER restart (herdr update,
 # crash, or a full OS reboot where you relaunch `herdr`), reconnect supported
