@@ -101,14 +101,21 @@ Prefix = `ctrl+b` (tmux-style). Everything not listed is a herdr default.
 | `split_vertical` (side-by-side) | `prefix+\|` | default `prefix+v` (restores tmux) |
 | `split_horizontal` (stacked) | `prefix+minus` | default |
 | `switch_tab` (tab 1–9) | `⌘1..9` (`super+1..9`) | default `prefix+1..9` — via iTerm2 forward |
-| `next_tab` / `previous_tab` | `⌘⇧]` / `⌘⇧[` | default `prefix+n`/`p` — via iTerm2 forward |
+| `next_tab` / `previous_tab` | `["⌘⇧]"/"prefix+n"]` · `["⌘⇧["/"prefix+p"]` | **array multi-bind**: ⌘ chord (iTerm2 forward) + `prefix+n`/`p` default for the moshi swipe |
 | `switch_workspace` (ws 1–9) | `⌃1..9` (`ctrl+1..9`) | default `prefix+shift+1..9` — **native** |
 | `next_workspace`/`previous_workspace` | `⌘⇧J` / `⌘⇧K` | unset by default — via iTerm2 forward |
 | `focus_agent` (agent 1–9) | `prefix+alt+1..9` | unset by default (needs Option=Esc+) |
 | `next_agent`/`previous_agent` | `ctrl+alt+j` / `ctrl+alt+k` | unset by default (needs Option=Esc+) |
+| pane resize ±5% | `prefix+h/j/k/l` | via `[[keys.command]]` + `herdr pane resize` CLI (no native action) |
 
 Splits are named by **divider orientation** (tmux `split -h` side-by-side == herdr
 `split_vertical`).
+
+**Multi-bind:** a herdr action accepts a **list of keys** (per the
+[docs](https://herdr.dev/docs/keyboard/): `focus_pane_left = ["prefix+h", "ctrl+alt+h"]`) —
+every key in the list fires the action. `next_tab`/`previous_tab` use this to serve desktop and
+mobile at once: the custom `⌘⇧]`/`⌘⇧[` chord for desktop, plus herdr's `prefix+n`/`prefix+p`
+default that the **moshi** mobile tab-swipe emits (mobile has no ⌘/iTerm2 layer).
 
 **Session restore** (`[session] resume_agents_on_restore` + `[experimental] pane_history`):
 on a server restart, agent panes reconnect to their native conversation sessions and prior
@@ -124,11 +131,27 @@ accepts exactly 16 tokens and **silently drops unknown keys** — a clean `reloa
 
 ## Gotchas
 
+- **`[[keys.command]]` MUST be the last thing in `[keys]`.** It's a TOML *array-of-tables*, and
+  that header **ends the parent table** — so every scalar binding written *below* it (`next_tab`,
+  `previous_tab`, workspaces, `copy_mode`, `detach`…) is silently absorbed into the last command
+  table and dropped from `[keys]`, and herdr falls back to each action's **default**.
+  `reload-config` still reports `applied`/`diagnostics:[]` — no warning. This is what broke
+  `⌘⇧]`/`⌘⇧[` on 2026-07-06 (the pane-resize blocks were mid-`[keys]`, so `next_tab` reverted to
+  its `prefix+n` default — which *looked* like a working fallback and hid the real cause). Keep all
+  `[[keys.command]]` at the very end, right before `[theme]`. **Tell-tale:** several unrelated
+  bindings revert to defaults at once → suspect table *structure*, not the individual keys.
+- **Array elements aren't validated by `reload-config`.** A bad key as a *scalar* → `status:partial`
+  + `invalid keybinding …; disabling binding`. The same bad key *inside an array* → no diagnostic.
+  So `diagnostics:[]` does NOT prove every array element bound — confirm array chords by pressing
+  them. (Don't repeat the 2026-07-06 mistake of concluding "arrays don't work" from a silent reload;
+  arrays DO work, they just don't self-report bad elements.)
 - `ctrl+h/j/k/l` become **global** chords (no vim-tmux-navigator passthrough) — if `ctrl+j/k`
   collide with vim, switch that block to `ctrl+alt+h/j/k/l`.
 - iTerm2 rewrites its plist **on quit**, so plist edits only persist while it is not running —
   that's why the ⌘-chord script bounces it.
 - `ctrl+alt+j/k` collide with Enter (0x0A/0x0D) in legacy encoding; they work cleanly only via
   the Kitty protocol iTerm2 3.6+ negotiates. If cycling gets flaky, that's why.
-- `⌘⇧[`/`⌘⇧]` (shifted punctuation over Kitty) is the least-certain chord — if it won't fire,
-  fall back to `prefix+n`/`p` or move to `⌘⇧N`/`⌘⇧P`.
+- If a ⌘ chord doesn't fire but its `prefix+…` twin does — **and** the `[keys]` structure is sound
+  (see the first gotcha) — then herdr bound it fine and iTerm2 isn't forwarding the bytes: reapply
+  `iterm-herdr-cmd-keys.sh`. `⌘⇧[`/`⌘⇧]` (shifted punctuation over Kitty) is the least-certain
+  chord; last-resort fallback is `⌘⇧N`/`⌘⇧P`.

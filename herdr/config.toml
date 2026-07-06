@@ -61,12 +61,21 @@ swap_pane_right = "prefix+shift+l"
 
 # --- Tabs (tmux "windows") ---
 new_tab      = "prefix+c"
-# Cycle tabs with cmd+shift+[ / ] (2026-07-06) — replaces prefix+n/p as the primary
-# cycler. ] = next, [ = prev (browser/vim convention). super = iTerm2-forwarded cmd.
+# Cycle tabs with cmd+shift+[ / ] (2026-07-06) as the PRIMARY desktop cycler.
+# ] = next, [ = prev (browser/vim convention). super = iTerm2-forwarded cmd.
 # NOTE: punctuation+shift+super over Kitty is the least-certain chord here — if it
 # won't fire, fall back to prefix+n/p or move to cmd+shift+n/p.
-next_tab     = "super+shift+]"   # was prefix+n
-previous_tab = "super+shift+["   # was prefix+p
+#
+# MULTI-BIND via ARRAY (per official docs https://herdr.dev/docs/keyboard/): a herdr action
+# accepts a LIST of keystrings — e.g. `focus_pane_left = ["prefix+h", "ctrl+alt+h"]`. Both keys
+# fire the action. So we bind the custom desktop chord AND herdr's default together: the default
+# prefix+n/prefix+p keeps the moshi (mobile) tab-swipe gesture working, while ⌘⇧]/⌘⇧[ drives it
+# on desktop (iTerm2 forwards ⌘⇧]→ESC[93;10u, ⌘⇧[→ESC[91;10u via iterm-herdr-cmd-keys.sh).
+# NOTE: `reload-config` does NOT emit a diagnostic for a bad element inside an array (only for a
+# bad SCALAR key) — so "diagnostics:[] / applied" does not by itself prove every element bound;
+# confirm array chords by actually pressing them.
+next_tab     = ["super+shift+]", "prefix+n"]   # desktop ⌘⇧]  ·  moshi swipe / ctrl+b n
+previous_tab = ["super+shift+[", "prefix+p"]   # desktop ⌘⇧[  ·  moshi swipe / ctrl+b p
 close_tab    = "prefix+shift+x"
 
 # --- Workspaces (cycle) — cmd+shift+j/k (2026-07-06) ---
@@ -78,6 +87,41 @@ previous_workspace = "super+shift+k"
 # --- Session / misc ---
 detach    = "prefix+q"   # tmux: prefix+d
 copy_mode = "prefix+["    # vi-style copy mode
+
+# --- One-shot pane resize (2026-07-06) — tmux `bind -r h/j/k/l resize-pane ±5` port ---
+# ⚠️ MUST BE THE LAST THING IN [keys]: `[[keys.command]]` is a TOML array-of-tables, which
+# ENDS the [keys] table. Any scalar binding (next_tab, previous_tab, workspaces, copy_mode…)
+# placed AFTER these blocks gets absorbed into the last command table and silently dropped
+# from [keys] → herdr falls back to that action's DEFAULT. (This bit us 2026-07-06: the
+# blocks were mid-[keys] and killed ⌘⇧]/⌘⇧[.) Keep [[keys.command]] at the very end.
+#
+# herdr 0.7.1 has NO resize_pane_* keybind action (binary-verified: only resize_mode/zoom),
+# but [[keys.command]] type="shell" + the `herdr pane resize` CLI gets the same effect.
+# prefix+h/j/k/l is FREE here because pane focus is ctrl-only (see top of [keys]).
+# Semantics: --direction X MOVES THE PANE'S X-SIDE BORDER outward (grows the pane that
+# way); --amount is a split-RATIO fraction clamped to 0.1..0.9 (NOT cells — 5 ≈ slam to
+# clamp). 0.05 ≈ tmux's "5 cells" feel on a full-width split. Not repeatable (prefix
+# needed each press) — for continuous adjustment use resize_mode (prefix+r, then hjkl).
+# Verified live: --current resolves to the FOCUSED pane server-side.
+[[keys.command]]
+key = "prefix+h"
+type = "shell"
+command = "herdr pane resize --direction left --amount 0.05 --current"
+
+[[keys.command]]
+key = "prefix+j"
+type = "shell"
+command = "herdr pane resize --direction down --amount 0.05 --current"
+
+[[keys.command]]
+key = "prefix+k"
+type = "shell"
+command = "herdr pane resize --direction up --amount 0.05 --current"
+
+[[keys.command]]
+key = "prefix+l"
+type = "shell"
+command = "herdr pane resize --direction right --amount 0.05 --current"
 
 [theme]
 # Nord to match the rest of the dotfiles (tmux/iTerm2/p10k all Nord).
@@ -134,6 +178,8 @@ resume_agents_on_restore = true
 pane_history = true
 
 # --- Not ported / no 1:1 herdr equivalent (kept here as a record) ---
+# tmux prefix+h/j/k/l resize ±5 -> PORTED 2026-07-06 via [[keys.command]] + CLI (see above)
+# tmux prefix+m resize-pane -Z  -> herdr zoom = prefix+z (bound above)
 # tmux C-k clear-history        -> no herdr action (and ctrl+k is now pane-focus-up)
 # tmux prefix+J join-pane       -> no direct herdr equivalent
 # tmux prefix+S sync-panes      -> no herdr equivalent
