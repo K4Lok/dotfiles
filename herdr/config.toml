@@ -24,9 +24,17 @@ focus_pane_down  = "ctrl+j"
 focus_pane_up    = "ctrl+k"
 focus_pane_right = "ctrl+l"
 
-# --- Indexed jumps — CTRL-ONLY (herdr defaults: prefix+1..9 / prefix+shift+1..9) ---
-switch_tab       = "ctrl+1..9"        # tab 1–9
-switch_workspace = "ctrl+shift+1..9"  # workspace 1–9
+# --- Indexed jumps (2026-07-06 rework: tabs→CMD, workspaces→CTRL) ---
+# Rationale: with herdr now the whole terminal life, reclaim macOS cmd+1..9
+# (was iTerm2 tab-switch) to drive herdr TABS, and demote workspaces to ctrl+1..9.
+# HOW cmd reaches herdr: NOT a global Cmd→Super remap (that would swallow cmd+C/V
+# inside herdr). Instead iTerm2 has a SURGICAL per-key mapping for ONLY these chords
+# that sends the Kitty-protocol super-encoded CSI-u sequence — so the token is
+# `super`, not `cmd` (herdr sees the super bit). Everything else on cmd (copy/paste/
+# find) stays with iTerm2. iTerm2 setup + escape table: see the KB doc below.
+#   cmd+1 → ESC[49;9u  …  cmd+9 → ESC[57;9u   (super = kitty mod 8, sent as 9)
+switch_tab       = "super+1..9"   # cmd+1..9  → tab 1–9        (was ctrl+1..9)
+switch_workspace = "ctrl+1..9"    # ctrl+1..9 → workspace 1–9  (was ctrl+shift+1..9; ctrl+shift removed)
 
 # --- Agent layer (all three ship UNSET in herdr) ---
 # focus_agent has NO herdr default despite older notes here — it must be bound explicitly.
@@ -53,9 +61,19 @@ swap_pane_right = "prefix+shift+l"
 
 # --- Tabs (tmux "windows") ---
 new_tab      = "prefix+c"
-next_tab     = "prefix+n"
-previous_tab = "prefix+p"
+# Cycle tabs with cmd+shift+[ / ] (2026-07-06) — replaces prefix+n/p as the primary
+# cycler. ] = next, [ = prev (browser/vim convention). super = iTerm2-forwarded cmd.
+# NOTE: punctuation+shift+super over Kitty is the least-certain chord here — if it
+# won't fire, fall back to prefix+n/p or move to cmd+shift+n/p.
+next_tab     = "super+shift+]"   # was prefix+n
+previous_tab = "super+shift+["   # was prefix+p
 close_tab    = "prefix+shift+x"
+
+# --- Workspaces (cycle) — cmd+shift+j/k (2026-07-06) ---
+# j = next, k = prev (vim + matches next_agent/previous_agent = ctrl+alt+j/k).
+# Indexed workspace jump is switch_workspace = ctrl+1..9 (see above).
+next_workspace     = "super+shift+j"
+previous_workspace = "super+shift+k"
 
 # --- Session / misc ---
 detach    = "prefix+q"   # tmux: prefix+d
