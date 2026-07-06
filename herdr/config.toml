@@ -76,25 +76,48 @@ name = "nord"
 # Token names are herdr's Catppuccin-style palette roles (from the binary):
 #   text/subtext0 = primary/secondary fg · overlay0/1 = muted · panel_bg/surface* = chrome bg
 [theme.custom]
-# Solid dark sidebar/panel background (Nord0) — stops the translucent desktop
-# wallpaper bleeding through the sidebar and washing out dim labels.
-panel_bg    = "#2e3440"
-surface_dim = "#2e3440"
-# Foreground tokens — the agent status sub-labels (idle/claude/done/working)
-# use one of default/on, not overlay0, so lift those too.
-default  = "#c2cce2"   # base foreground fallback
-on       = "#c2cce2"   # on-surface text
-subtext0 = "#d0d8ea"   # secondary text (agent title row) — near-primary brightness
-overlay1 = "#c9d3e8"   # muted label (higher tier) — near-primary
-overlay0 = "#c2cce2"   # dim tier — cranked way up from ~#4c566a
+# Readability tuning for the translucent iTerm2 window (2026-07-06).
+# ROOT FIX: a SOLID sidebar/panel background so the desktop wallpaper can't
+# bleed through and wash out dim labels.
+# SOURCE-VERIFIED against herdr src (config/theme.rs:32-49, ui/status.rs:231-239):
+#   Agent STATUS labels use SEMANTIC tokens — idle->green, working->yellow,
+#   done->teal, blocked->red, unknown->overlay0. The agent NAME label
+#   (claude/codex/...) uses overlay0 +DIM for ALL agents. Leave the semantic
+#   tokens on base Nord — overriding green=#00ff88 is what caused neon labels.
+#   Only 16 tokens are valid (accent panel_bg surface0 surface1 surface_dim
+#   overlay0 overlay1 text subtext0 mauve green yellow red blue teal peach);
+#   there is NO `default`/`on` key — serde silently drops unknown keys, so the
+#   old default=/on= lines were dead no-ops. Primary fg is `text`.
+panel_bg    = "#2e3440"   # Nord0 — solid sidebar bg, stops wallpaper bleed
+surface_dim = "#2e3440"   # active agent-row background fill
+# Lift only the muted tokens so dim sidebar text stays legible:
+subtext0 = "#d0d8ea"   # inactive workspace/tab title row
+overlay1 = "#c9d3e8"   # muted label (higher tier)
+overlay0 = "#c2cce2"   # agent-name label + unknown status + muted UI — lifted from Nord ~#4c566a
 
 [ui]
 sidebar_width = 32
 mouse_capture = true       # tmux: set -g mouse on
+
+[session]
+# tmux-resurrect/continuum equivalent. On a Herdr SERVER restart (herdr update,
+# crash, or a full OS reboot where you relaunch `herdr`), reconnect supported
+# agent panes to their NATIVE conversation sessions instead of a blank shell.
+# Requires the agent's official integration to be installed so it reports a
+# session ref — verified present: `herdr integration status` shows claude/codex/
+# opencode = current. Without that integration this key is a silent no-op.
+resume_agents_on_restore = true
+
+[experimental]
+# Restore recent pane SCROLLBACK TEXT across a full server restart, so panes
+# come back with their prior output visible (not just the layout). Complements
+# [session] above: resume_agents_on_restore reconnects the agent conversation;
+# pane_history brings back what was on screen. Experimental per herdr docs.
+pane_history = true
 
 # --- Not ported / no 1:1 herdr equivalent (kept here as a record) ---
 # tmux C-k clear-history        -> no herdr action (and ctrl+k is now pane-focus-up)
 # tmux prefix+J join-pane       -> no direct herdr equivalent
 # tmux prefix+S sync-panes      -> no herdr equivalent
 # tmux prefix+r reload-config   -> herdr reloads config itself; no keybind needed
-# resurrect/continuum persist   -> see herdr [session] (agent session restoration) in docs
+# resurrect/continuum persist   -> IMPLEMENTED above via [session] resume_agents_on_restore
