@@ -20,7 +20,8 @@ This setup includes a modern, aesthetically pleasing terminal environment with t
 - **Powerlevel10k** - Fast, feature-rich prompt theme
 - **zsh-autosuggestions** - Fish-like autosuggestions for Zsh
 - **zsh-syntax-highlighting** - Syntax highlighting for Zsh
-- **Tmux** with Nord theme for terminal multiplexing
+- **Tmux** with Nord theme for terminal multiplexing (being replaced by **herdr** — see below)
+- **herdr** - agent multiplexer for AI coding (moshi/Tailscale mobile support), in evaluation
 - **iTerm2** with complete configuration including Nord color scheme, fonts, profiles, and preferences
 
 ### Installation
@@ -149,6 +150,26 @@ Key bindings:
 - `Prefix + h/j/k/l` - Navigate panes
 - `Prefix + |/-` - Split panes horizontally/vertically
 - (Prefix is `Ctrl+b` by default)
+
+#### herdr (tmux replacement, in evaluation)
+
+[herdr](https://herdr.dev) is an agent multiplexer trialed as a tmux replacement — picked for
+its **moshi** (mosh-over-Tailscale) support, which makes AI coding from mobile viable. The
+config ports the tmux muscle memory (`ctrl+b` prefix, `ctrl+h/j/k/l` pane focus, `prefix+|`
+split) and adds ⌘-chord tab nav forwarded through iTerm2, plus agent-session + scrollback
+restore across server restarts.
+
+```sh
+brew install herdr
+ln -sfn ~/dotfiles/herdr/config.toml ~/.config/herdr/config.toml
+herdr integration install claude               # agent-state hook (for session restore)
+herdr integration install codex                # (repeat per agent you use)
+herdr                                          # launch + attach
+bash ~/dotfiles/scripts/iterm-herdr-cmd-keys.sh   # ⌘-chord forwarding (bounces iTerm2)
+```
+
+Full setup, iTerm2 toggles, and keybinding table: [`herdr/README.md`](herdr/README.md).
+The tmux config is kept until herdr is confirmed as the daily driver.
 
 ---
 
