@@ -27,7 +27,12 @@ focus_pane_right = "ctrl+l"
 # --- Indexed jumps — CTRL-ONLY (herdr defaults: prefix+1..9 / prefix+shift+1..9) ---
 switch_tab       = "ctrl+1..9"        # tab 1–9
 switch_workspace = "ctrl+shift+1..9"  # workspace 1–9
-# focus_agent stays on the default prefix+alt+1..9 (not remapped)
+
+# --- Agent layer — "prefix+alt is ALWAYS agents" (all three ship UNSET in herdr) ---
+# focus_agent has NO herdr default despite older notes here — it must be bound explicitly.
+focus_agent    = "prefix+alt+1..9"  # jump to agent N (indexed)
+next_agent     = "prefix+alt+j"     # cycle forward  (vim j = down/next, matches pane-focus grammar)
+previous_agent = "prefix+alt+k"     # cycle back     (vim k = up/prev)
 
 # --- Splits (functional match to tmux; note the naming inversion) ---
 # tmux prefix+|  = split -h = side-by-side   -> herdr split_vertical  (vertical divider)
@@ -56,8 +61,30 @@ copy_mode = "prefix+["    # vi-style copy mode
 
 [theme]
 # Nord to match the rest of the dotfiles (tmux/iTerm2/p10k all Nord).
-# If "nord" isn't a bundled theme name, fall back to "catppuccin".
+# Confirmed bundled in herdr 0.7.1 (`herdr --default-config` lists it).
 name = "nord"
+
+# --- Readability overrides (2026-07-06) ---
+# Problem: sidebar agent-group status labels (idle / working / done / claude)
+# render in Nord's muted tokens (overlay0/overlay1/subtext0 ≈ #4c566a dark
+# blue-grays). With iTerm2 window transparency the desktop wallpaper bleeds
+# through the sidebar, so those dim labels become near-invisible.
+# Fix: keep the Nord family but lift the muted tokens into the snow-storm range
+# so secondary text stays legible over a busy translucent background.
+# Token names are herdr's Catppuccin-style palette roles (from the binary):
+#   text/subtext0 = primary/secondary fg · overlay0/1 = muted · panel_bg/surface* = chrome bg
+[theme.custom]
+# Solid dark sidebar/panel background (Nord0) — stops the translucent desktop
+# wallpaper bleeding through the sidebar and washing out dim labels.
+panel_bg    = "#2e3440"
+surface_dim = "#2e3440"
+# Foreground tokens — the agent status sub-labels (idle/claude/done/working)
+# use one of default/on, not overlay0, so lift those too.
+default  = "#c2cce2"   # base foreground fallback
+on       = "#c2cce2"   # on-surface text
+subtext0 = "#d0d8ea"   # secondary text (agent title row) — near-primary brightness
+overlay1 = "#c9d3e8"   # muted label (higher tier) — near-primary
+overlay0 = "#c2cce2"   # dim tier — cranked way up from ~#4c566a
 
 [ui]
 sidebar_width = 32
