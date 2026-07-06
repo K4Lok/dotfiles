@@ -32,7 +32,7 @@ switch_workspace = "ctrl+shift+1..9"  # workspace 1–9
 # --- Splits (functional match to tmux; note the naming inversion) ---
 # tmux prefix+|  = split -h = side-by-side   -> herdr split_vertical  (vertical divider)
 # tmux prefix+-  = split -v = stacked        -> herdr split_horizontal (horizontal divider)
-split_vertical   = "prefix+v"
+split_vertical   = "prefix+|"     # literal pipe glyph — herdr reconciles physical shift+\ (NOT "shift+backslash")
 split_horizontal = "prefix+minus"
 
 # --- Pane management ---
