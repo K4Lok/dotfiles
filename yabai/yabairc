@@ -4,13 +4,11 @@ sudo yabai --load-sa
 
 # ====== Variables ============================
 
-declare -A gaps
-
-gaps["top"]="6"
-gaps["bottom"]="6"
-gaps["left"]="6"
-gaps["right"]="6"
-gaps["inner"]="8"
+gap_top="6"
+gap_bottom="6"
+gap_left="6"
+gap_right="6"
+gap_inner="8"
 
 focused_color="0xff494d64"
 normal_color="0xffe1e3e4"
@@ -19,11 +17,11 @@ normal_color="0xffe1e3e4"
 
 yabai -m config layout                      bsp
 
-yabai -m config top_padding                 ${gaps["top"]}
-yabai -m config bottom_padding              ${gaps["bottom"]}
-yabai -m config left_padding                ${gaps["left"]}
-yabai -m config right_padding               ${gaps["right"]}
-yabai -m config window_gap                  ${gaps["inner"]}
+yabai -m config top_padding                 ${gap_top}
+yabai -m config bottom_padding              ${gap_bottom}
+yabai -m config left_padding                ${gap_left}
+yabai -m config right_padding               ${gap_right}
+yabai -m config window_gap                  ${gap_inner}
 
 # ===== Rules ==================================
 
@@ -40,14 +38,17 @@ yabai -m rule --add label="CleanShot X" app="^CleanShot X$" manage=off
 yabai -m rule --add label="Screen Studio" app="^Screen Studio$" manage=off
 yabai -m rule --add label="Perplexity Voice Mode" app="^Perplexity$" title="^Perplexity Voice Mode$" manage=off
 yabai -m rule --add label="Simulator" app="^Simulator$" manage=off
+yabai -m rule --add label="Typeless" app="^Typeless$" manage=off
 
 # use following comment to list out the window title
 # yabai -m query --windows \
 #   | jq -r '.[] | "\(.id)\t\(.app)\t\(.title)"'
 
 # ===== Border Plugin ==========================
-borders \
-    active_color="$focused_color" \
-    inactive_color="$normal_color" \
-    width=4.0 \
-    blacklist="Screen Studio,iPhone Mirroring" &
+# borders \
+#     active_color="$focused_color" \
+#     inactive_color="$normal_color" \
+#     width=4.0 \
+#     hidpi=on \
+#     style=round \
+#     blacklist="Screen Studio,iPhone Mirroring" &

@@ -177,87 +177,18 @@ alias cpbn='git branch --show-current | pbcopy'
 
 export DFX_MOC_PATH=moc-wrapper
 
-# ── Work VPN (openvpn CLI) ──────────────────────────────────────────
-# Config: ~/.config/openvpn/work.ovpn (cert-only auth; never committed).
-# Usage: vpn-up → ssh -fN <db-tunnel> → vpn-down   (host alias lives in ~/.ssh/config)
-export VPN_CFG="$HOME/.config/openvpn/work.ovpn"
-export VPN_PID="$HOME/.config/openvpn/work.pid"
-export VPN_LOG="$HOME/.config/openvpn/work.log"
-# Bypass helper lives in this dotfiles repo, so every cloned device has it
-# with no extra symlink step.
-export VPN_TS_BYPASS="$HOME/dotfiles/openvpn/tailscale-bypass.sh"
+export PATH="/Users/k4lok/.bun/bin:$PATH"
 
-vpn-up() {
-  if [ -f "$VPN_PID" ] && sudo kill -0 "$(cat "$VPN_PID")" 2>/dev/null; then
-    echo "VPN already up (pid $(cat "$VPN_PID"))"; return 0
-  fi
-  # Self-heal for a device set up before the config was renamed: if the expected
-  # config is absent but exactly one other *.ovpn sits alongside it, adopt that
-  # one. Discovered at runtime so no old/identifying filename lives in this repo.
-  if [ ! -f "$VPN_CFG" ]; then
-    local _vdir _legacy _n
-    _vdir=$(dirname "$VPN_CFG")
-    _legacy=$(find "$_vdir" -maxdepth 1 -type f -name '*.ovpn' ! -name "$(basename "$VPN_CFG")" 2>/dev/null)
-    _n=$(printf '%s' "$_legacy" | grep -c .)
-    if [ "$_n" = "1" ]; then
-      echo "Adopting existing OpenVPN config → $(basename "$VPN_CFG")"
-      mv "$_legacy" "$VPN_CFG" || { echo "⚠️  could not rename config"; return 1; }
-    elif [ "$_n" -gt 1 ]; then
-      echo "⚠️  $VPN_CFG missing and multiple *.ovpn present — rename the right one to $(basename "$VPN_CFG") manually"; return 1
-    else
-      echo "⚠️  VPN config not found: $VPN_CFG — install the OpenVPN profile there"; return 1
-    fi
-  fi
-  # Capture the real router BEFORE the full tunnel takes over, so Tailscale's
-  # DERP/control traffic can be pinned back to it (see tailscale-bypass.sh).
-  local phys_gw
-  phys_gw=$(route -n get default 2>/dev/null | awk '/gateway/{print $2; exit}')
-  echo "Starting VPN (sudo)…"
-  sudo openvpn --config "$VPN_CFG" --daemon --writepid "$VPN_PID" --log "$VPN_LOG"
-  for i in {1..15}; do
-    if grep -q "Initialization Sequence Completed" "$VPN_LOG" 2>/dev/null; then
-      echo "✅ VPN up"
-      PHYS_GW="$phys_gw" sh "$VPN_TS_BYPASS" add || echo "⚠️  tailscale-bypass failed — Tailscale may be down"
-      # Re-pin a few seconds later: some /32 DERP routes can fail to land on the
-      # first pass while the tunnel's own 0/1+128.0/1 routes are still settling,
-      # leaving only a subset of a region's relay nodes pinned (root cause of the
-      # 2026-07-02 breakage: only 1 of 3 hkg nodes pinned → Tailscale relay/mosh
-      # broke when it used an unpinned node). `add` re-pulls the live DERP map and
-      # is idempotent (route add||change||true), so this backfills the stragglers.
-      # sudo is still cached from the openvpn start above, so no prompt.
-      ( sleep 6; PHYS_GW="$phys_gw" sh "$VPN_TS_BYPASS" add >/dev/null 2>&1 ) &
-      vpn-status; return 0
-    fi
-    sleep 1
-  done
-  echo "⚠️  VPN didn't confirm in 15s — tail $VPN_LOG"; return 1
-}
 
-vpn-down() {
-  sh "$VPN_TS_BYPASS" del 2>/dev/null || true
-  if [ -f "$VPN_PID" ]; then
-    sudo kill "$(cat "$VPN_PID")" 2>/dev/null && echo "VPN stopped"
-    sudo rm -f "$VPN_PID"
-  else
-    sudo pkill -f "openvpn --config $VPN_CFG" && echo "VPN stopped (by name)" || echo "VPN was not running"
-  fi
-}
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<
 
-# Show whether the tunnel process is alive, plus current public IP + geo
-# (so you can confirm traffic is actually egressing via the VPN).
-vpn-status() {
-  if [ -f "$VPN_PID" ] && sudo kill -0 "$(cat "$VPN_PID")" 2>/dev/null; then
-    echo "VPN process: UP (pid $(cat "$VPN_PID"))"
-  else
-    echo "VPN process: DOWN"
-  fi
-  echo "Public IP / location:"
-  local info
-  info=$(curl -fsS --max-time 8 ipinfo.io/json 2>/dev/null)
-  if [ -n "$info" ]; then
-    echo "$info" | jq -r '"  ip:      \(.ip)\n  location: \(.city), \(.region), \(.country)\n  org:     \(.org)"'
-  else
-    echo "  (could not reach ipinfo.io — check connectivity)"
-  fi
-}
+# Tailscale CLI
+alias tailscale='/Applications/Tailscale.app/Contents/MacOS/Tailscale'
 
+# Machine-local, untracked overrides (VPN helpers, work-specific aliases, secrets).
+# Lives outside this public repo — see ~/.zshrc.local. Never committed.
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

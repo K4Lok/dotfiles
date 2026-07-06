@@ -6,6 +6,11 @@ karabiner/*
 
 .DS_Store
 
+# Editor swap/temp files
+*.swp
+*.swo
+*~
+
 # ── Secrets & VPN runtime artifacts — NEVER commit ──────────────
 # cert-only .ovpn files embed private keys; .pem/.key are credentials.
 *.ovpn

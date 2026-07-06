@@ -1,0 +1,71 @@
+# Herdr config — ported from ~/dotfiles/.tmux.conf
+# Docs: https://herdr.dev/docs/configuration/  ·  https://herdr.dev/docs/keyboard/
+# Live location: ~/.config/herdr/config.toml  (symlink this file there — see readme)
+#
+# Two deliberate departures from herdr defaults, matching Eric's tmux muscle memory:
+#   1. Pane focus is CTRL-ONLY  (ctrl+h/j/k/l)  — was vim-tmux-navigator's C-h/j/k/l
+#   2. Indexed tab jumps are CTRL-ONLY (ctrl+1..9) — herdr default is prefix+1..9
+
+onboarding = false
+
+[keys]
+# Keep the tmux prefix so the rest of the default chord vocabulary still applies.
+prefix = "ctrl+b"
+
+# --- Pane focus — CTRL-ONLY (tmux: vim-tmux-navigator C-h / C-j / C-k / C-l) ---
+# NOTE: these become GLOBAL chords, so herdr swallows them before the shell/vim.
+#   ctrl+h is normally Backspace (usually harmless — most terminals send DEL 0x7f)
+#   ctrl+j is normally Enter/newline, ctrl+l is normally clear-screen.
+# If any of those bite, switch this block to ctrl+alt+h/j/k/l (herdr's recommended
+# collision-free chord). tmux avoided this via vim-tmux-navigator's smart passthrough,
+# which herdr does not replicate.
+focus_pane_left  = "ctrl+h"
+focus_pane_down  = "ctrl+j"
+focus_pane_up    = "ctrl+k"
+focus_pane_right = "ctrl+l"
+
+# --- Indexed jumps — CTRL-ONLY (herdr defaults: prefix+1..9 / prefix+shift+1..9) ---
+switch_tab       = "ctrl+1..9"        # tab 1–9
+switch_workspace = "ctrl+shift+1..9"  # workspace 1–9
+# focus_agent stays on the default prefix+alt+1..9 (not remapped)
+
+# --- Splits (functional match to tmux; note the naming inversion) ---
+# tmux prefix+|  = split -h = side-by-side   -> herdr split_vertical  (vertical divider)
+# tmux prefix+-  = split -v = stacked        -> herdr split_horizontal (horizontal divider)
+split_vertical   = "prefix+v"
+split_horizontal = "prefix+minus"
+
+# --- Pane management ---
+zoom        = "prefix+z"   # tmux: prefix+m (resize-pane -Z)
+close_pane  = "prefix+x"
+resize_mode = "prefix+r"   # enter resize mode, then h/j/k/l (tmux: prefix+h/j/k/l, repeatable)
+swap_pane_left  = "prefix+shift+h"
+swap_pane_down  = "prefix+shift+j"
+swap_pane_up    = "prefix+shift+k"
+swap_pane_right = "prefix+shift+l"
+
+# --- Tabs (tmux "windows") ---
+new_tab      = "prefix+c"
+next_tab     = "prefix+n"
+previous_tab = "prefix+p"
+close_tab    = "prefix+shift+x"
+
+# --- Session / misc ---
+detach    = "prefix+q"   # tmux: prefix+d
+copy_mode = "prefix+["    # vi-style copy mode
+
+[theme]
+# Nord to match the rest of the dotfiles (tmux/iTerm2/p10k all Nord).
+# If "nord" isn't a bundled theme name, fall back to "catppuccin".
+name = "nord"
+
+[ui]
+sidebar_width = 32
+mouse_capture = true       # tmux: set -g mouse on
+
+# --- Not ported / no 1:1 herdr equivalent (kept here as a record) ---
+# tmux C-k clear-history        -> no herdr action (and ctrl+k is now pane-focus-up)
+# tmux prefix+J join-pane       -> no direct herdr equivalent
+# tmux prefix+S sync-panes      -> no herdr equivalent
+# tmux prefix+r reload-config   -> herdr reloads config itself; no keybind needed
+# resurrect/continuum persist   -> see herdr [session] (agent session restoration) in docs
