@@ -28,11 +28,13 @@ focus_pane_right = "ctrl+l"
 switch_tab       = "ctrl+1..9"        # tab 1–9
 switch_workspace = "ctrl+shift+1..9"  # workspace 1–9
 
-# --- Agent layer — "prefix+alt is ALWAYS agents" (all three ship UNSET in herdr) ---
+# --- Agent layer (all three ship UNSET in herdr) ---
 # focus_agent has NO herdr default despite older notes here — it must be bound explicitly.
+# Cycling is GLOBAL ctrl+alt (not a prefix chord) — mirrors ctrl-only pane focus,
+# and a single-press global chord is more reliable than prefix-then-alt.
 focus_agent    = "prefix+alt+1..9"  # jump to agent N (indexed)
-next_agent     = "prefix+alt+j"     # cycle forward  (vim j = down/next, matches pane-focus grammar)
-previous_agent = "prefix+alt+k"     # cycle back     (vim k = up/prev)
+next_agent     = "ctrl+alt+j"       # cycle forward — global (vim j = down/next)
+previous_agent = "ctrl+alt+k"       # cycle back    — global (vim k = up/prev)
 
 # --- Splits (functional match to tmux; note the naming inversion) ---
 # tmux prefix+|  = split -h = side-by-side   -> herdr split_vertical  (vertical divider)
