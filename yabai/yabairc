@@ -2,6 +2,13 @@
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
+# Discord (Electron) often wins the race against its own accessibility tree and
+# ends up with has-ax-reference=false — yabai can see the window but can't tile,
+# move, or float-toggle it. The script restarts yabai only if that actually
+# happened. It also fires on Discord's frequent self-update relaunch.
+yabai -m signal --add label="Discord AX repair" event=application_launched app="^Discord$" \
+  action="~/dotfiles/yabai/scripts/ax-repair.sh '^Discord$' &"
+
 # ====== Variables ============================
 
 gap_top="6"

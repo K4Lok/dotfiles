@@ -1,6 +1,10 @@
 # Restart yabai
 rshift + lctrl + ralt + rcmd + lcmd - r : yabai --restart-service
 
+# Repair windows yabai can see but not control (no AX reference).
+# Use when a window ignores every binding — float toggle included.
+rshift + lctrl + ralt + rcmd + lcmd - g : ~/dotfiles/yabai/scripts/ax-repair.sh
+
 # Focus next Display (lands on a real window, skips Typeless overlay)
 rshift + lctrl + ralt + rcmd - n : ~/dotfiles/yabai/scripts/focus-display.sh next
 
