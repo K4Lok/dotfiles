@@ -86,7 +86,15 @@ for _label, (char, vkc, text) in shifted.items():
 # for our GlobalKeyMap escapes → herdr switch_tab). We never use iTerm2 tab-by-number.
 d["SwitchTabModifier"] = 9
 
-plist.write_bytes(plistlib.dumps(d))
+# Write BINARY, not XML (plistlib's default). plistlib's XML serialiser applies the
+# XML spec's line-ending normalisation, turning a literal CR (0x0d) inside any Text
+# value into LF (0x0a). Our own chord payloads ("[49;9u" etc.) contain no CR so this
+# was invisible here — but Claude Code's Shift+Enter binding is ESC+CR, and an XML
+# write silently downgrades it to ESC+LF, breaking Shift+Enter. No error is raised
+# and the key still exists, so it only shows if you inspect the BYTE (plutil -p does
+# render it honestly: "^M" = CR, good; "\n" = LF, broken).
+# Verified 2026-08-03. The live iTerm2 plist is binary anyway.
+plist.write_bytes(plistlib.dumps(d, fmt=plistlib.FMT_BINARY))
 
 # Keep the tracked, importable keymap record in sync with what's now live.
 record = {"Key Mappings": gkm, "Touch Bar Items": d.get("Touch Bar Items Map", {}) or {}}
