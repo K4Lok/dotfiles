@@ -416,6 +416,123 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
+		<key>0x31-0x100000-0x12</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[49;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x32-0x100000-0x13</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[50;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x33-0x100000-0x14</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[51;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x34-0x100000-0x15</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[52;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x35-0x100000-0x17</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[53;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x36-0x100000-0x16</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[54;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x37-0x100000-0x1a</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[55;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x38-0x100000-0x1c</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[56;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x39-0x100000-0x19</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[57;9u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x4a-0x120000-0x26</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[106;10u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x4b-0x120000-0x28</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[107;10u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x7b-0x120000-0x21</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[91;10u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
+		<key>0x7d-0x120000-0x1e</key>
+		<dict>
+			<key>Action</key>
+			<integer>10</integer>
+			<key>Text</key>
+			<string>[93;10u</string>
+			<key>Version</key>
+			<integer>2</integer>
+		</dict>
 		<key>0x9-0x40000</key>
 		<dict>
 			<key>Action</key>
@@ -1810,8 +1927,9 @@
 	</array>
 	<key>NoSyncAllAppVersions</key>
 	<array>
-		<string>3.5.14</string>
 		<string>3.6.6</string>
+		<string>3.5.14</string>
+		<string>3.6.11</string>
 		<string>3.6.8</string>
 	</array>
 	<key>NoSyncBFPFavorites</key>
@@ -1844,11 +1962,11 @@
 	<key>NoSyncInstallationId</key>
 	<string>05B11074-E630-46C4-8EEC-37D41AEEF82B</string>
 	<key>NoSyncLastOSVersion</key>
-	<string>Version 15.5 (Build 24F74)</string>
+	<string>Version 26.2 (Build 25C56)</string>
 	<key>NoSyncLastSystemPythonVersionRequirement</key>
 	<string>1.17</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>11</integer>
+	<integer>13</integer>
 	<key>NoSyncNeverAllowPaste</key>
 	<false/>
 	<key>NoSyncNeverAskAboutMouseReportingFrustration</key>
@@ -2813,7 +2931,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2026-03-24T16:07:39Z</date>
+	<date>2026-08-02T17:17:38Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SUSkippedVersion</key>
@@ -2830,6 +2948,8 @@
 	<false/>
 	<key>SplitPaneDimmingAmount</key>
 	<real>0.39617759146341464</real>
+	<key>SwitchTabModifier</key>
+	<integer>9</integer>
 	<key>TabStyleWithAutomaticOption</key>
 	<integer>5</integer>
 	<key>UseTmuxStatusBar</key>
@@ -2841,7 +2961,7 @@
 	<key>findMode_iTerm</key>
 	<integer>0</integer>
 	<key>iTerm Version</key>
-	<string>3.6.8</string>
+	<string>3.6.11</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

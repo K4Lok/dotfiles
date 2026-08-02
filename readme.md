@@ -70,7 +70,7 @@ The iTerm2 configuration includes:
 - **Profile**: "Nord + p10k" profile with optimized settings
 - **Preferences**: Window behavior, transparency, scrollback, and other customizations
 
-**Option A: Import Preferences File (Recommended for new setup)**
+**Option A: Import Preferences File (Recommended — use this, see caveat below)**
 
 1. Quit iTerm2 completely (`Cmd + Q`)
 2. Backup your existing preferences:
@@ -83,18 +83,18 @@ The iTerm2 configuration includes:
    ```
 4. Restart iTerm2 - your settings will be loaded automatically
 
-**Option B: Use Symlink (For syncing across machines)**
+**Option B: Use Symlink — ⚠️ DON'T (kept here as a documented dead end)**
 
-1. Quit iTerm2 completely (`Cmd + Q`)
-2. Backup your existing preferences:
-   ```sh
-   mv ~/Library/Preferences/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist.backup 2>/dev/null || true
-   ```
-3. Create a symlink:
-   ```sh
-   ln -s ~/dotfiles/iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
-   ```
-4. Restart iTerm2
+Symlinking `com.googlecode.iterm2.plist` looks appealing for auto-syncing changes back to the
+repo, but iTerm2 breaks it: at startup it does an atomic write (temp file + rename) that
+silently replaces the symlink with a plain file, and the content written back is not guaranteed
+complete — on 2026-08-03 this dropped `SwitchTabModifier` entirely and 9 of 13 herdr ⌘-chord
+`GlobalKeyMap` entries, with no error anywhere. Use **Option A** (copy) instead. To pull local
+iTerm2 changes back into the repo later, re-export manually:
+```sh
+plutil -convert xml1 -o ~/dotfiles/iterm2/com.googlecode.iterm2.plist ~/Library/Preferences/com.googlecode.iterm2.plist
+```
+Full writeup: [`herdr/README.md`](herdr/README.md#gotchas).
 
 **Note**: If you don't have JetBrains Mono Nerd Font installed, you can install it via:
 ```sh

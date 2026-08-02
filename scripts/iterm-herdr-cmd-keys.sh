@@ -16,6 +16,16 @@
 # stick while iTerm2 is NOT running. This script therefore bounces iTerm2. Your
 # herdr *server* keeps every pane alive across the bounce — after iTerm2 reopens,
 # run `herdr` to reattach. (Safe: we only ADD keys; nothing else is touched.)
+#
+# GOTCHA (found 2026-08-03): if $PLIST is a SYMLINK (e.g. dotfiles readme's iTerm2
+# "Option B: symlink for syncing"), iTerm2 silently breaks it on this same relaunch —
+# it does an atomic write (temp file + rename) at app startup that replaces the
+# symlink with a plain file, and that plain file is NOT guaranteed to carry every
+# key we just wrote (observed: SwitchTabModifier dropped entirely, only 4/13
+# GlobalKeyMap entries survived, no error). So: (1) this script always de-symlinks
+# $PLIST to a real file BEFORE editing, and (2) it VERIFIES the final on-disk state
+# after reopen instead of trusting the mid-script write. A clean "Writing…" message
+# is NOT proof the keys persisted — only the verification step at the end is.
 set -euo pipefail
 
 DOMAIN=com.googlecode.iterm2
@@ -27,6 +37,13 @@ osascript -e 'tell application "iTerm" to quit' >/dev/null 2>&1 || true
 for _ in $(seq 1 20); do pgrep -x iTerm2 >/dev/null || break; sleep 0.3; done
 pkill -x iTerm2 >/dev/null 2>&1 || true
 sleep 0.5
+
+if [ -L "$PLIST" ]; then
+  echo "→ \$PLIST is a symlink (breaks on iTerm2 relaunch) — replacing with a real copy…"
+  real_target="$(readlink -f "$PLIST")"
+  rm "$PLIST"
+  cp "$real_target" "$PLIST"
+fi
 
 echo "→ Writing the 13 ⌘ chord mappings into GlobalKeyMap…"
 PLIST="$PLIST" KEYMAP_RECORD="$KEYMAP_RECORD" python3 - <<'PY'
@@ -84,10 +101,47 @@ killall cfprefsd >/dev/null 2>&1 || true
 
 echo "→ Reopening iTerm2…"
 open -a iTerm
+for _ in $(seq 1 20); do pgrep -x iTerm2 >/dev/null && break; sleep 0.3; done
+sleep 2   # let iTerm2's own startup writes (if any) settle before we verify
+
+echo "→ Verifying the on-disk plist actually persisted (don't trust the write above)…"
+PLIST="$PLIST" python3 - <<'PY'
+import os, plistlib, pathlib, sys
+
+plist = pathlib.Path(os.environ["PLIST"])
+d = plistlib.loads(plist.read_bytes())
+gkm = d.get("GlobalKeyMap", {})
+
+NUM_VKC = {"1":0x12,"2":0x13,"3":0x14,"4":0x15,"5":0x17,"6":0x16,"7":0x1a,"8":0x1c,"9":0x19}
+expected = {f"0x{ord(ch):x}-0x100000-0x{NUM_VKC[ch]:x}" for ch in "123456789"}
+expected |= {"0x7d-0x120000-0x1e", "0x7b-0x120000-0x21", "0x4a-0x120000-0x26", "0x4b-0x120000-0x28"}
+
+missing = sorted(expected - set(gkm))
+modifier_ok = d.get("SwitchTabModifier") == 9
+
+ok = modifier_ok and not missing
+print(f"   SwitchTabModifier: {d.get('SwitchTabModifier')!r} ({'ok' if modifier_ok else 'WRONG, expected 9'})")
+print(f"   GlobalKeyMap: {len(expected) - len(missing)}/{len(expected)} expected chord entries present")
+if missing:
+    print(f"   MISSING: {missing}")
+sys.exit(0 if ok else 1)
+PY
+VERIFY_STATUS=$?
+
+if [ "$VERIFY_STATUS" -ne 0 ]; then
+  cat <<'FAIL'
+
+❌ Verification FAILED — the ⌘-chord config did not fully persist to disk.
+   Re-run this script (idempotent). If it fails again, don't trust a clean
+   "Writing…" message from a prior run as proof of success — only this
+   verification step (or manually checking $PLIST) tells the truth.
+FAIL
+  exit 1
+fi
 
 cat <<'DONE'
 
-✅ Done. In the fresh iTerm2 window:
+✅ Done and verified on disk. In the fresh iTerm2 window:
    1. run:  herdr        # reattach — your panes (incl. this Claude session) are still there
    2. test: ⌘1 / ⌘2 …    # jumps herdr tabs        (⌘C / ⌘V still copy/paste as before)
             ⌘⇧] / ⌘⇧[     # next / prev herdr tab
