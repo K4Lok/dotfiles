@@ -49,7 +49,7 @@ export PATH=$PATH:$HOME/.maestro/bin
 # opencode
 export PATH="$HOME/.opencode/bin:$PATH"
 
-export LANG=zh_TW.UTF-8
+export LANG=en_US.UTF-8
 
 # Added by Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
