@@ -149,6 +149,21 @@ accepts exactly 16 tokens and **silently drops unknown keys** — a clean `reloa
   collide with vim, switch that block to `ctrl+alt+h/j/k/l`.
 - iTerm2 rewrites its plist **on quit**, so plist edits only persist while it is not running —
   that's why the ⌘-chord script bounces it.
+- **Never symlink `~/Library/Preferences/com.googlecode.iterm2.plist` into the repo** (main
+  readme's old "Option B"). iTerm2 does an atomic write (temp file + rename) at startup that
+  silently replaces the symlink with a plain file — and the content it writes back is NOT
+  guaranteed complete: on 2026-08-03 this dropped `SwitchTabModifier` entirely and 9 of 13
+  `GlobalKeyMap` chord entries, with `⌘1..9` degrading to iTerm2's built-in tab-switch and no
+  error anywhere in the process. Use a **plain copy** for the live plist instead, and re-export
+  changes back with `plutil -convert xml1 -o ~/dotfiles/iterm2/com.googlecode.iterm2.plist
+  ~/Library/Preferences/com.googlecode.iterm2.plist` when you want to sync them. The main
+  readme's iTerm2 section has been updated accordingly.
+- **A clean script run is not proof the config persisted.** Grepping the plist for a key *name*
+  (e.g. `grep -c GlobalKeyMap`) only proves the dict exists, not that all entries under it
+  survived — that's exactly how the 2026-08-03 partial-write above went undetected for a while.
+  `iterm-herdr-cmd-keys.sh` now re-reads the on-disk plist after reopening iTerm2 and verifies
+  `SwitchTabModifier == 9` plus the exact count of expected `GlobalKeyMap` entries, failing loudly
+  if either is short. Trust that verification step (or a manual count), not key presence alone.
 - `ctrl+alt+j/k` collide with Enter (0x0A/0x0D) in legacy encoding; they work cleanly only via
   the Kitty protocol iTerm2 3.6+ negotiates. If cycling gets flaky, that's why.
 - If a ⌘ chord doesn't fire but its `prefix+…` twin does — **and** the `[keys]` structure is sound
