@@ -1,0 +1,18 @@
+/* macOS system-wide text key bindings (Cocoa NSTextView / NSTextField).
+ *
+ * Live location: ~/Library/KeyBindings/DefaultKeyBinding.dict  (symlink this file there)
+ *   ln -sfn ~/dotfiles/keybindings/DefaultKeyBinding.dict ~/Library/KeyBindings/DefaultKeyBinding.dict
+ *
+ * Read ONCE at app launch — restart an app for changes to take effect.
+ * Applies to Cocoa text fields (Safari, Mail, Notes, Obsidian, Slack, most Electron
+ * apps). Does NOT apply to terminal emulators: there ^W is the shell's job
+ * (zsh already binds ^W -> backward-kill-word), nor to apps that grab ^W first.
+ *
+ * Key syntax: ^ = control, ~ = option, $ = shift, @ = command.
+ *
+ * 2026-08-15: recreated after ~/Library/KeyBindings vanished. Kept in dotfiles this
+ * time so it survives — the original was never version-controlled.
+ */
+{
+    "^w" = "deleteWordBackward:";
+}
