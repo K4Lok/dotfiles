@@ -336,7 +336,9 @@
                                     {
                                         "bundle_identifiers": [
                                             "^com\\.googlecode\\.iterm2$",
-                                            "^com\\.apple\\.Terminal$"
+                                            "^com\\.apple\\.Terminal$",
+                                            "^com\\.mitchellh\\.ghostty$",
+                                            "^dev\\.warp\\.Warp-Stable$"
                                         ],
                                         "type": "frontmost_application_unless"
                                     }
