@@ -34,6 +34,7 @@ yabai -m config window_gap                  ${gap_inner}
 
 yabai -m rule --add label="Finder" app="^Finder$" manage=off
 yabai -m rule --add label="System Settings" app="^System Settings$" manage=off
+yabai -m rule --add label="System Preferences" app="^System Preferences$" manage=off
 yabai -m rule --add label="Activity Monitor" app="^Activity Monitor$" manage=off
 yabai -m rule --add label="Calculator" app="^Calculator$" manage=off
 yabai -m rule --add label="iPhone Mirroring" app="^iPhone Mirroring$" manage=off
