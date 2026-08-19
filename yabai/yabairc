@@ -44,8 +44,26 @@ yabai -m rule --add label="WeChat" app="^WeChat$" manage=off
 yabai -m rule --add label="CleanShot X" app="^CleanShot X$" manage=off
 yabai -m rule --add label="Screen Studio" app="^Screen Studio$" manage=off
 yabai -m rule --add label="Perplexity Voice Mode" app="^Perplexity$" title="^Perplexity Voice Mode$" manage=off
-yabai -m rule --add label="Simulator" app="^Simulator$" manage=off
 yabai -m rule --add label="Typeless" app="^Typeless$" manage=off
+
+# ----- Device emulators / simulators ----------
+# These open at a fixed device aspect ratio and spawn extra tool windows
+# (extended controls, device chooser, log panes). Tiling any of them reflows
+# the whole space, so every window of these processes stays unmanaged.
+
+# iOS / watchOS / tvOS / visionOS — Xcode's Simulator.app, all its windows
+yabai -m rule --add label="Simulator" app="^Simulator$" manage=off
+# Standalone "Simulator" launcher shipped with older Xcode / Instruments
+yabai -m rule --add label="Simulator Suite" app="^Simulator \(.*\)$" manage=off
+
+# Android — the emulator is the raw QEMU binary, name varies by host arch
+# (qemu-system-aarch64 on Apple Silicon, qemu-system-x86_64 on Intel)
+yabai -m rule --add label="Android Emulator (qemu)" app="^qemu-system-.*$" manage=off
+# Android Studio >= 2023 can launch it as its own Emulator.app bundle
+yabai -m rule --add label="Android Emulator (app)" app="^Emulator$" manage=off
+yabai -m rule --add label="Android Emulator (named)" app="^Android Emulator$" manage=off
+# Device chooser / AVD manager dialogs owned by Android Studio
+yabai -m rule --add label="Android Device Manager" app="^Android Studio$" title="(Emulator|Device Manager|Running Devices)" manage=off
 
 # use following comment to list out the window title
 # yabai -m query --windows \
